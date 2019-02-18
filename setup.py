@@ -342,9 +342,9 @@ if 'install' in ' '.join(sys.argv) or 'build' in ' '.join(sys.argv) or 'sdist' i
 
 # Install the module, script, and support files
 setup(
-    name=MODULE_NAME,
+    name='stegoveritas-binwalk',
     version=MODULE_VERSION,
-    description="Firmware analysis tool",
+    description="Binwalk release specifically for stegoveritas.",
     author="Craig Heffner",
     url="https://github.com/ReFirmLabs/%s" % MODULE_NAME,
     requires=[],

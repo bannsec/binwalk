@@ -7,6 +7,7 @@ import subprocess
 from distutils.core import setup, Command
 from distutils.dir_util import remove_tree
 
+PACKAGE_NAME = "stegoveritas-binwalk"
 MODULE_NAME = "binwalk"
 MODULE_VERSION = "2.1.3"
 SCRIPT_NAME = MODULE_NAME
@@ -22,14 +23,16 @@ except ImportError:
 
 # If this version of binwalk was checked out from the git repository,
 # include the git commit hash as part of the version number reported
-# by binwalk.
-try:
-    label = subprocess.check_output(["git", "rev-parse", "--short", "HEAD"], stderr=DEVNULL).decode('utf-8')
-    MODULE_VERSION = "%s-%s" % (MODULE_VERSION, label.strip())
-except KeyboardInterrupt as e:
-    raise e
-except Exception:
-    pass
+# by binwalk. Skip this for sdist/bdist_wheel builds since PyPI
+# rejects local version identifiers.
+if 'sdist' not in sys.argv and 'bdist_wheel' not in sys.argv:
+    try:
+        label = subprocess.check_output(["git", "rev-parse", "--short", "HEAD"], stderr=DEVNULL).decode('utf-8')
+        MODULE_VERSION = "%s+%s" % (MODULE_VERSION, label.strip())
+    except KeyboardInterrupt as e:
+        raise e
+    except Exception:
+        pass
 
 # Python2/3 compliance
 try:
@@ -342,7 +345,7 @@ if 'install' in ' '.join(sys.argv) or 'build' in ' '.join(sys.argv) or 'sdist' i
 
 # Install the module, script, and support files
 setup(
-    name=MODULE_NAME,
+    name=PACKAGE_NAME,
     version=MODULE_VERSION,
     description="Firmware analysis tool",
     author="Craig Heffner",
